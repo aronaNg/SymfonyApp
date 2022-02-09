@@ -1,0 +1,43 @@
+{% extends "admin/layout.html.twig" %}
+{% block body %}
+    <div class="container">
+        Recapitulatifs des produits
+        <div class="row">
+            <a href="{{ path('admin_produit_add') }}" class="btn btn-primary m-1 p-1"> Ajouter un produit </a>
+        </div>
+        <div>
+            <table class="table">
+                <caption>Recapitulatifs des produits (V3 : essai form)</caption>
+                <thead class="thead-dark">
+                <tr><th>nom</th><th>id</th><th>type</th><th>prix</th><th>nom photo</th><th>photo</th>
+                    <th>opération</th>
+                </tr>
+                </thead>
+                <tbody>
+                {% if produits is not empty %}
+                    {% for produit in produits  %}
+                        <tr>
+                            <td>{{produit.nom}} {# produit.getNom()#} </td>
+                            <td>{{produit.id}}</td><td>{{produit.typeProduit.libelle | default('pas de type')}}</td><td>{{produit.prix}} €</td><td>
+                                {{produit.photo}}</td><td>
+                                <img style="width:40px;height:40px" src="{{asset('images/')}}{{produit.photo}}" alt="image du produit" >
+                            </td>
+                            <td>
+                                <a href="{{ path('admin_produit_edit', {id: produit.id}) }}" class="btn btn-primary">modifier</a>
+                                <form action="{{ path('admin_produit_delete') }}" method="POST" style="display:inline">
+                                    <input type="hidden" name="token" value="{{ csrf_token('produit_delete') }}">
+                                    <input type="hidden" name="id" value="{{ produit.id }}">
+                                    <input type="hidden" name="_method" value="DELETE">
+                                    <button type="submit" class="btn btn-warning">Supprimer</button>
+                                </form>
+                            </td>
+                        </tr>
+                    {% endfor %}
+                {% else %}
+                    <tr class="table-warning"><td>Pas de Produit</td></tr>
+                {% endif %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+{% endblock %}
